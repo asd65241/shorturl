@@ -15,10 +15,12 @@
     "express": "^4.17.1",
     "express-ip": "^1.0.4",
     "extract-domain": "^2.2.1",
+    "geoip-lite": "^1.4.2",
     "get-url-title": "^2.0.0",
     "mongoose": "^5.11.18",
     "ngrok": "^3.4.0",
     "nodemon": "^2.0.7",
+    "request-ip": "^2.1.3",
     "save-dev": "0.0.1-security",
     "shortid": "^2.2.16"
   }

@@ -1,9 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const ShortUrl = require("./models/shortUrl");
-const expressip = require("express-ip");
+const requestIp = require("request-ip");
 const getUrlTitle = require("get-url-title");
 const extractDomain = require("extract-domain");
+const geoip = require("geoip-lite");
 require("dotenv").config();
 const app = express();
 
@@ -14,7 +15,7 @@ mongoose.connect(process.env.MONGODB_KEY, {
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false }));
-app.use(expressip().getIpInfoMiddleware);
+app.use(requestIp.mw());
 
 app.get("/", async (req, res) => {
   const shortUrls = await ShortUrl.find();
@@ -81,20 +82,20 @@ app.get("/:shortUrl", async (req, res) => {
 
   res.redirect(shortUrl.full);
 
-  if ("error" in req.ipInfo) {
-    console.log(req.ipInfo.error);
-  } else {
-    await shortUrl.update({
-      $addToSet: {
-        click_history: {
-          ip: req.ipInfo.ip,
-          country: req.ipInfo.country,
-          location: req.ipInfo.ll,
-        },
+  const client_ip = req.clientIp;
+  const client_geo = geoip.lookup(client_ip);
+  console.log(ip);
+  console.log(geo);
+
+  await shortUrl.update({
+    $addToSet: {
+      click_history: {
+        ip: client_geo.ip,
+        country: client_geo.country,
+        location: client_geo.ll,
       },
-    });
-    console.log(req.ipInfo)
-  }
+    },
+  });
 
   shortUrl.save();
 });
