@@ -84,8 +84,8 @@ app.get("/:shortUrl", async (req, res) => {
 
   const client_ip = req.clientIp;
   const client_geo = geoip.lookup(client_ip);
-  console.log(ip);
-  console.log(geo);
+  console.log(client_ip);
+  console.log(client_geo);
 
   await shortUrl.update({
     $addToSet: {
