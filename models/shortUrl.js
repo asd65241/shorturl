@@ -42,7 +42,7 @@ const shortUrlSchmea = mongoose.Schema({
       timestamp: {
         type: String,
         required: true,
-        default: Date.now,
+        default: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       },
     },
   ],

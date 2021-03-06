@@ -4,15 +4,13 @@ const ShortUrl = require("./models/shortUrl");
 const expressip = require("express-ip");
 const getUrlTitle = require("get-url-title");
 const extractDomain = require("extract-domain");
+require("dotenv").config();
 const app = express();
 
-mongoose.connect(
-  "mongodb+srv://wms-lifemall:z2LDUA6m3GlIA3O5@wmsenv0.oxb8o.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-);
+mongoose.connect(process.env.MONGODB_KEY, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false }));
@@ -50,24 +48,27 @@ app.get("/status/:shortUrl", async (req, res) => {
 
   const arr = await data.click_history;
 
-  const label = []
-  const value = []
+  const label = [];
+  const value = [];
 
   for (i = 0; i < arr.length; i++) {
     const element = arr[i].country;
     if (label.indexOf(element) < 0) {
       label.push(element);
-      value.push(0);
+      value.push(1);
     } else {
       value[label.indexOf(element)] += 1;
     }
   }
 
   const plt = {
-    'values': value,
-    'labels': label,
-    'type': 'pie'
-  }
+    datasets: [
+      {
+        data: value,
+      },
+    ],
+    labels: label,
+  };
 
   res.render("status", { data: data, plt: JSON.stringify(plt) });
 });
@@ -92,6 +93,7 @@ app.get("/:shortUrl", async (req, res) => {
         },
       },
     });
+    console.log(req.ipInfo)
   }
 
   shortUrl.save();

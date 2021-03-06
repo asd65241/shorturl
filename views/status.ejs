@@ -11,7 +11,8 @@
       integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
       crossorigin="anonymous"
     />
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
     <style>
       body {
         font-family: "Work Sans", "Helvetica Neue", "Helvetica", Helvetica,
@@ -19,7 +20,7 @@
         font-weight: 800;
       }
       .brand-title {
-        background: -webkit-linear-gradient(45deg, #09009f, #00ff95 80%);
+        background: -webkit-linear-gradient(0deg, #0085ff, #cc42c5);
         font-size: 2em;
         -webkit-text-fill-color: transparent;
         -webkit-background-clip: text;
@@ -31,7 +32,7 @@
     </style>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container">
-        <a class="navbar-brand brand-title" href="../../">ShortUrl縮短網址</a>
+        <a class="navbar-brand brand-title" href="../../">ShortUrl</a>
         <div class="navbar-nav ms-auto">
           <a class="nav-link" href="#">Logout</a>
         </div>
@@ -45,16 +46,24 @@
           <div class="col-lg">
             <div class="card mb-3">
               <div class="card-body">
-                <div id="plt_country"></div>
+                <canvas id="region"></canvas>
               </div>
             </div>
           </div>
           <div class="col-lg">
             <div class="card mb-3">
               <div class="card-body">
+                <h5 class="card-title">Recent Clicks</h5>
+                <h6 class="card-subtitle">
+                  <span class="badge bg-danger"
+                    >Total Clicks: <%= data.clicks %></span
+                  >
+                </h6>
                 <ul class="list-group list-group-flush">
                   <% data.click_history.forEach((element,index) =>{ %>
-                  <li class="list-group-item"><%= element.ip %> (<%- element.timestamp %>)</li>
+                  <li class="list-group-item">
+                    <%= index+1 %>. <%= element.ip %> (<%- element.timestamp %>)
+                  </li>
                   <% }) %>
                 </ul>
               </div>
@@ -65,14 +74,18 @@
     </div>
   </body>
   <script>
-    var data = [<%- plt %>];
+       let ctx = document.getElementById("region").getContext('2d');
 
-    var layout = {
-      title: 'Click Origin'
-    };
-
-    var config = {responsive: true};
-
-    Plotly.newPlot('plt_country', data, layout, config);
+        let myDoughnutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: <%- plt %>,
+        options: {
+        title: {
+            display: true,
+            text: 'Clicks from region'
+        }
+    }
+    });
+    dayjs.extend(relativeTime)
   </script>
 </html>
