@@ -24,13 +24,28 @@ app.get("/", async (req, res) => {
 
 app.post("/shortUrls", async (req, res) => {
   const domain = extractDomain(req.body.fullUrl);
-  const title = await getUrlTitle(req.body.fullUrl);
-  await ShortUrl.create({
+  const url_title = await getUrlTitle(req.body.fullUrl);
+  
+  const title = url_title == null ? 'No title' : url_title;
+
+  const new_entry = await ShortUrl.findOne({
     full: req.body.fullUrl,
-    title: title,
-    domain: domain,
   });
-  res.redirect("/");
+
+  if (new_entry == null)
+  {
+    await ShortUrl.create({
+      full: req.body.fullUrl,
+      title: title,
+      domain: domain,
+    });
+    res.redirect("/");
+  }
+  else
+  {
+    res.redirect("/");
+  }
+  
 });
 
 app.get("/status/:shortUrl", async (req, res) => {
