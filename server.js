@@ -92,7 +92,7 @@ app.get("/status/:shortUrl", async (req, res) => {
       },
       plugins: {
         colorschemes: {
-          scheme: "brewer.DarkTwo3",
+          scheme: "tableau.Tableau20",
         },
       },
     },
