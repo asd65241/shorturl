@@ -5,6 +5,7 @@ const requestIp = require("request-ip");
 const getUrlTitle = require("get-url-title");
 const extractDomain = require("extract-domain");
 const geoip = require("geoip-lite");
+const path = require("path");
 require("dotenv").config();
 const app = express();
 
@@ -14,6 +15,7 @@ mongoose.connect(process.env.MONGODB_KEY, {
 });
 
 app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: false }));
 app.use(requestIp.mw());
 
@@ -25,27 +27,23 @@ app.get("/", async (req, res) => {
 app.post("/shortUrls", async (req, res) => {
   const domain = extractDomain(req.body.fullUrl);
   const url_title = await getUrlTitle(req.body.fullUrl);
-  
-  const title = url_title == null ? 'No title' : url_title;
+
+  const title = url_title == null ? "No title" : url_title;
 
   const new_entry = await ShortUrl.findOne({
     full: req.body.fullUrl,
   });
 
-  if (new_entry == null)
-  {
+  if (new_entry == null) {
     await ShortUrl.create({
       full: req.body.fullUrl,
       title: title,
       domain: domain,
     });
     res.redirect("/");
-  }
-  else
-  {
+  } else {
     res.redirect("/");
   }
-  
 });
 
 app.get("/status/:shortUrl", async (req, res) => {
@@ -78,12 +76,26 @@ app.get("/status/:shortUrl", async (req, res) => {
   }
 
   const plt = {
-    datasets: [
-      {
-        data: value,
+    type: "doughnut",
+    data: {
+      datasets: [
+        {
+          data: value,
+        },
+      ],
+      labels: label,
+    },
+    options: {
+      title: {
+        display: true,
+        text: "Clicks from region",
       },
-    ],
-    labels: label,
+      plugins: {
+        colorschemes: {
+          scheme: "brewer.DarkTwo3",
+        },
+      },
+    },
   };
 
   res.render("status", { data: data, plt: JSON.stringify(plt) });
@@ -91,9 +103,8 @@ app.get("/status/:shortUrl", async (req, res) => {
 
 app.get("/:shortUrl", async (req, res) => {
   const shortUrl = await ShortUrl.findOne({ short: req.params.shortUrl });
-  if (shortUrl == null) return res.sendStatus(404);
 
-  shortUrl.clicks++;
+  if (shortUrl == null) return res.sendStatus(404);
 
   res.redirect(shortUrl.full);
 
@@ -105,12 +116,14 @@ app.get("/:shortUrl", async (req, res) => {
   await shortUrl.update({
     $addToSet: {
       click_history: {
-        ip: client_geo.ip,
+        ip: client_ip,
         country: client_geo.country,
         location: client_geo.ll,
       },
     },
   });
+
+  shortUrl.clicks++;
 
   shortUrl.save();
 });

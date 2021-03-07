@@ -76,7 +76,15 @@
                 <a href="<%= shortUrl.full %>"><%= shortUrl.title %></a>
               </td>
               <td>
-                <a href="<%= shortUrl.short %>"><%= shortUrl.short %></a>
+                <a href="<%- process.env.BASE_URL %>/<%= shortUrl.short %>"
+                  ><%- process.env.BASE_URL %>/<%= shortUrl.short %></a
+                >
+                <a
+                  class="btn btn-sm btn-outline-primary flex-fill mx-1 text-nowrap"
+                  data-clipboard-text="<%- process.env.BASE_URL %>/<%= shortUrl.short %>"
+                >
+                  Copy to Clipboard
+                </a>
               </td>
               <td>
                 <span class="badge bg-danger"><%= shortUrl.clicks %></span>
@@ -108,6 +116,9 @@
             </p>
             <p class="card-text">
               Full Link: <a href="<%= shortUrl.full %>"><%= shortUrl.full %></a>
+            </p>
+            <p class="card-text">
+              Short Link: <a href="<%- process.env.BASE_URL %>/<%= shortUrl.short %>"><%- process.env.BASE_URL %>/<%= shortUrl.short %></a>
             </p>
             <div class="d-flex flex-row justify-content-center">
               <button

@@ -13,6 +13,7 @@
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
     <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
     <style>
       body {
         font-family: "Work Sans", "Helvetica Neue", "Helvetica", Helvetica,
@@ -76,16 +77,6 @@
   <script>
        let ctx = document.getElementById("region").getContext('2d');
 
-        let myDoughnutChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: <%- plt %>,
-        options: {
-        title: {
-            display: true,
-            text: 'Clicks from region'
-        }
-    }
-    });
-    dayjs.extend(relativeTime)
+      let myDoughnutChart = new Chart(ctx, <%- plt %>);
   </script>
 </html>
