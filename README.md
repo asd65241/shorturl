@@ -5,13 +5,12 @@ This is a URL shortening web service project that have similar feature like [Tin
 ## Usage
 
 1. Git the current repository
-`git clone https://github.com/asd65241/shorturl.git`
+  `git clone https://github.com/asd65241/shorturl.git`
 
 2. Go to the folder
-`cd shorturl`
+  `cd shorturl`
 
 3. Create .env file
-
   `touch .env`
 
 4. Fill the .env file using the following template
