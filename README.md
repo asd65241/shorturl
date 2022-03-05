@@ -42,13 +42,16 @@ services:
   shorturl:
       build: .
       image: "shorturl"
-      port:
+      ports:
         - 80:8000
       container_name: "shorturl"
       restart: "always"
       networks: 
           - "net"
       environment:
+            MONGODB_KEY: "YOUR-MONGO-KEY"
+            PORT: "8000"
+            BASE_URL: "https://YOUR-DOMAIN"
             VIRTUAL_HOST: "YOUR-DOMAIN"
             LETSENCRYPT_HOST: "YOUR-DOMAIN"
             VIRTUAL_PORT: "80"
@@ -56,7 +59,6 @@ services:
 networks:
     net:
         external: true
-
 ```
 
 Then, do the following command:
