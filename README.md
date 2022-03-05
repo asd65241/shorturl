@@ -39,7 +39,7 @@ Fill the 'docker-compose.yml' with the following template
 
 ```
 services:
-  shopify-api:
+  shorturl:
       build: .
       image: "shorturl"
       port:
