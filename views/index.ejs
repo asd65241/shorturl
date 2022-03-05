@@ -35,7 +35,8 @@
       <div class="container">
         <a class="navbar-brand brand-title" href="#">ShortUrl</a>
         <div class="navbar-nav ms-auto">
-          <a class="nav-link" href="#">Logout</a>
+          <!-- Login/Logout Button -->
+          <a class="nav-link" href="#"></a>
         </div>
       </div>
     </nav>
@@ -82,6 +83,7 @@
                 <a
                   class="btn btn-sm btn-outline-primary flex-fill mx-1 text-nowrap"
                   data-clipboard-text="<%- process.env.BASE_URL %>/<%= shortUrl.short %>"
+                  onClick=""
                 >
                   Copy to Clipboard
                 </a>
