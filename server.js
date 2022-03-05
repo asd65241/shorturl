@@ -128,4 +128,4 @@ app.get("/:shortUrl", async (req, res) => {
   shortUrl.save();
 });
 
-app.listen(process.env.PORT);
+app.listen(process.PORT);
